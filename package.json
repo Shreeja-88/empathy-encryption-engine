@@ -1,0 +1,25 @@
+{
+  "name": "empathy-encryption-engine",
+  "version": "1.0.0",
+  "description": "A full-stack human-centered password validation system that evaluates intentional structure, predictability, keyboard patterns, and visual clarity through an explainable scoring engine.",
+  "main": "index.js",
+  "scripts": {
+  "start": "node server/index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Shreeja-88/empathy-encryption-engine.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/Shreeja-88/empathy-encryption-engine/issues"
+  },
+  "homepage": "https://github.com/Shreeja-88/empathy-encryption-engine#readme",
+  "dependencies": {
+    "cors": "^2.8.6",
+    "express": "^5.2.1"
+  }
+}

@@ -1,0 +1,1345 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>E3 — Empathy Encryption Engine</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Mono:ital,wght@0,400;0,700;1,400&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --slate:    #2C3531;
+            --teal:     #116466;
+            --teal-light: #1a7a7d;
+            --sand:     #D9B08C;
+            --cream:    #FFCB9A;
+            --mist:     #D1E8E2;
+            --bg:       #1a2120;
+            --bg-deep:  #111817;
+            --glass:    rgba(17, 100, 102, 0.12);
+            --glass-border: rgba(209, 232, 226, 0.1);
+            --text:     #D1E8E2;
+            --text-muted: rgba(209,232,226,0.5);
+            --danger:   #e05a5a;
+            --warn:     #D9B08C;
+            --good:     #4ab8a0;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        html { scroll-behavior: smooth; }
+
+        body {
+            font-family: 'DM Sans', sans-serif;
+            background: var(--bg-deep);
+            color: var(--text);
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        /* ─── BACKGROUND GRID ─── */
+        body::before {
+            content: '';
+            position: fixed;
+            inset: 0;
+            background-image:
+                linear-gradient(rgba(17,100,102,0.06) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(17,100,102,0.06) 1px, transparent 1px);
+            background-size: 48px 48px;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        /* ─── NAV ─── */
+        nav {
+            position: fixed;
+            top: 0; left: 0; right: 0;
+            z-index: 100;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 1.25rem 3rem;
+            background: rgba(17, 24, 23, 0.85);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid var(--glass-border);
+        }
+
+        .nav-logo {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .logo-mark {
+            width: 32px; height: 32px;
+            border: 1.5px solid var(--teal);
+            border-radius: 6px;
+            display: grid;
+            place-items: center;
+            position: relative;
+        }
+
+        .logo-mark::before {
+            content: '';
+            width: 12px; height: 12px;
+            background: var(--sand);
+            border-radius: 2px;
+            transform: rotate(45deg);
+        }
+
+        .logo-text {
+            font-family: 'Space Mono', monospace;
+            font-size: 0.85rem;
+            letter-spacing: 0.2em;
+            color: var(--mist);
+            text-transform: uppercase;
+        }
+
+        .logo-text span { color: var(--sand); }
+
+        .nav-links {
+            display: flex;
+            gap: 2.5rem;
+            list-style: none;
+        }
+
+        .nav-links a {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            text-decoration: none;
+            letter-spacing: 0.05em;
+            transition: color 0.2s;
+        }
+
+        .nav-links a:hover { color: var(--mist); }
+
+        .nav-cta {
+            background: var(--teal);
+            color: var(--mist) !important;
+            padding: 0.5rem 1.25rem;
+            border-radius: 6px;
+            border: 1px solid rgba(209,232,226,0.15);
+            transition: background 0.2s !important;
+        }
+
+        .nav-cta:hover { background: var(--teal-light) !important; color: var(--mist) !important; }
+
+        /* ─── HERO ─── */
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            padding: 8rem 2rem 4rem;
+            position: relative;
+            z-index: 1;
+        }
+
+        .hero-glow {
+            position: absolute;
+            width: 600px; height: 600px;
+            background: radial-gradient(circle, rgba(17,100,102,0.25) 0%, transparent 70%);
+            top: 50%; left: 50%;
+            transform: translate(-50%, -50%);
+            pointer-events: none;
+        }
+
+        .hero-glow-2 {
+            position: absolute;
+            width: 300px; height: 300px;
+            background: radial-gradient(circle, rgba(217,176,140,0.12) 0%, transparent 70%);
+            top: 40%; left: 60%;
+            pointer-events: none;
+        }
+
+        .hero-tag {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-family: 'Space Mono', monospace;
+            font-size: 0.7rem;
+            letter-spacing: 0.2em;
+            color: var(--sand);
+            text-transform: uppercase;
+            border: 1px solid rgba(217,176,140,0.3);
+            padding: 0.4rem 1rem;
+            border-radius: 100px;
+            margin-bottom: 2rem;
+            animation: fadeUp 0.8s ease both;
+        }
+
+        .hero-tag::before {
+            content: '';
+            width: 6px; height: 6px;
+            border-radius: 50%;
+            background: var(--sand);
+            animation: pulse 2s infinite;
+        }
+
+        .hero h1 {
+            font-family: 'Space Mono', monospace;
+            font-size: clamp(2.2rem, 5vw, 4.5rem);
+            font-weight: 700;
+            line-height: 1.1;
+            letter-spacing: -0.02em;
+            margin-bottom: 1.5rem;
+            animation: fadeUp 0.9s 0.1s ease both;
+        }
+
+        .hero h1 .accent { color: var(--sand); }
+        .hero h1 .teal { color: var(--teal-light); }
+
+        .hero-sub {
+            font-size: 1.1rem;
+            color: var(--text-muted);
+            max-width: 520px;
+            margin: 0 auto 3rem;
+            line-height: 1.7;
+            font-weight: 300;
+            animation: fadeUp 1s 0.2s ease both;
+        }
+
+        .hero-actions {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            animation: fadeUp 1s 0.3s ease both;
+        }
+
+        .btn-primary {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.85rem 2rem;
+            background: var(--teal);
+            color: var(--mist);
+            border: 1px solid rgba(209,232,226,0.15);
+            border-radius: 8px;
+            font-family: 'DM Sans', sans-serif;
+            font-size: 0.95rem;
+            font-weight: 500;
+            text-decoration: none;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .btn-primary:hover {
+            background: var(--teal-light);
+            box-shadow: 0 0 30px rgba(17,100,102,0.4);
+            transform: translateY(-1px);
+        }
+
+        .btn-ghost {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.85rem 2rem;
+            background: transparent;
+            color: var(--text-muted);
+            border: 1px solid var(--glass-border);
+            border-radius: 8px;
+            font-family: 'DM Sans', sans-serif;
+            font-size: 0.95rem;
+            text-decoration: none;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .btn-ghost:hover { color: var(--mist); border-color: rgba(209,232,226,0.25); }
+
+        /* ─── STATS BAR ─── */
+        .stats-bar {
+            position: relative;
+            z-index: 1;
+            display: flex;
+            justify-content: center;
+            gap: 0;
+            padding: 0 2rem 5rem;
+            animation: fadeUp 1s 0.5s ease both;
+        }
+
+        .stat-item {
+            padding: 1.5rem 3rem;
+            border: 1px solid var(--glass-border);
+            background: var(--glass);
+            backdrop-filter: blur(10px);
+            text-align: center;
+            position: relative;
+        }
+
+        .stat-item:first-child { border-radius: 10px 0 0 10px; }
+        .stat-item:last-child  { border-radius: 0 10px 10px 0; }
+        .stat-item + .stat-item { border-left: none; }
+
+        .stat-num {
+            font-family: 'Space Mono', monospace;
+            font-size: 1.6rem;
+            color: var(--sand);
+            font-weight: 700;
+        }
+
+        .stat-label {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            margin-top: 0.25rem;
+        }
+
+        /* ─── VALIDATOR SECTION ─── */
+        #validator {
+            position: relative;
+            z-index: 1;
+            padding: 6rem 2rem;
+        }
+
+        .section-label {
+            font-family: 'Space Mono', monospace;
+            font-size: 0.7rem;
+            letter-spacing: 0.25em;
+            color: var(--teal-light);
+            text-transform: uppercase;
+            text-align: center;
+            margin-bottom: 1rem;
+        }
+
+        .section-title {
+            font-family: 'Space Mono', monospace;
+            font-size: clamp(1.6rem, 3vw, 2.5rem);
+            text-align: center;
+            margin-bottom: 0.75rem;
+            color: var(--mist);
+        }
+
+        .section-sub {
+            text-align: center;
+            color: var(--text-muted);
+            font-size: 0.95rem;
+            margin-bottom: 4rem;
+        }
+
+        .validator-layout {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+            max-width: 1100px;
+            margin: 0 auto;
+        }
+
+        .validator-left {
+            background: rgba(44,53,49,0.6);
+            border: 1px solid var(--glass-border);
+            border-radius: 16px;
+            padding: 2.5rem;
+            backdrop-filter: blur(20px);
+        }
+
+        .input-label {
+            font-family: 'Space Mono', monospace;
+            font-size: 0.7rem;
+            letter-spacing: 0.15em;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            margin-bottom: 0.75rem;
+            display: block;
+        }
+
+        .input-wrapper {
+            position: relative;
+            margin-bottom: 2rem;
+        }
+
+        #password {
+            width: 100%;
+            padding: 1rem 3.5rem 1rem 1.25rem;
+            background: rgba(17,100,102,0.1);
+            border: 1px solid var(--glass-border);
+            border-radius: 8px;
+            color: var(--mist);
+            font-family: 'Space Mono', monospace;
+            font-size: 1rem;
+            letter-spacing: 0.05em;
+            transition: all 0.2s;
+        }
+
+        #password:focus {
+            outline: none;
+            border-color: var(--teal);
+            background: rgba(17,100,102,0.15);
+            box-shadow: 0 0 0 3px rgba(17,100,102,0.15);
+        }
+
+        #password::placeholder {
+            color: rgba(209,232,226,0.2);
+            font-family: 'DM Sans', sans-serif;
+            letter-spacing: 0;
+        }
+
+        .toggle-btn {
+            position: absolute;
+            right: 1rem;
+            top: 50%;
+            transform: translateY(-50%);
+            background: none;
+            border: none;
+            color: var(--text-muted);
+            cursor: pointer;
+            font-size: 1rem;
+            transition: color 0.2s;
+            padding: 0.25rem;
+        }
+
+        .toggle-btn:hover { color: var(--sand); }
+
+        /* ─── CHAR MAP ─── */
+        .char-map-label {
+            font-family: 'Space Mono', monospace;
+            font-size: 0.65rem;
+            letter-spacing: 0.12em;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            margin-bottom: 0.75rem;
+        }
+
+        #char-map {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 4px;
+            min-height: 36px;
+            margin-bottom: 2rem;
+        }
+
+        .char-token {
+            font-family: 'Space Mono', monospace;
+            font-size: 0.85rem;
+            padding: 3px 8px;
+            border-radius: 4px;
+            font-weight: 700;
+        }
+
+        .char-lower   { background: rgba(17,100,102,0.4); color: #6dcfcb; }
+        .char-upper   { background: rgba(217,176,140,0.2); color: var(--sand); }
+        .char-digit   { background: rgba(255,203,154,0.2); color: var(--cream); }
+        .char-symbol  { background: rgba(209,232,226,0.15); color: var(--mist); }
+
+        /* ─── STRENGTH METER ─── */
+        .meter-section { margin-bottom: 2rem; }
+
+        .meter-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: baseline;
+            margin-bottom: 0.6rem;
+        }
+
+        .meter-title {
+            font-family: 'Space Mono', monospace;
+            font-size: 0.65rem;
+            letter-spacing: 0.12em;
+            color: var(--text-muted);
+            text-transform: uppercase;
+        }
+
+        .meter-score {
+            font-family: 'Space Mono', monospace;
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--mist);
+        }
+
+        .meter-score span {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+        }
+
+        .progress-track {
+            height: 6px;
+            background: rgba(209,232,226,0.08);
+            border-radius: 3px;
+            overflow: hidden;
+            margin-bottom: 0.75rem;
+        }
+
+        #progress-fill {
+            height: 100%;
+            width: 0%;
+            border-radius: 3px;
+            transition: width 0.4s cubic-bezier(0.4,0,0.2,1), background 0.4s;
+        }
+
+        .strength-labels {
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .strength-label {
+            font-family: 'Space Mono', monospace;
+            font-size: 0.6rem;
+            color: var(--text-muted);
+            opacity: 0.5;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+        }
+
+        /* ─── RIGHT PANEL: ANALYSIS ─── */
+        .validator-right {
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+
+        .analysis-card {
+            background: rgba(44,53,49,0.6);
+            border: 1px solid var(--glass-border);
+            border-radius: 12px;
+            padding: 1.5rem;
+            backdrop-filter: blur(20px);
+            flex: 1;
+        }
+
+        .analysis-card-header {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-bottom: 1.25rem;
+            padding-bottom: 0.75rem;
+            border-bottom: 1px solid var(--glass-border);
+        }
+
+        .analysis-card-header .dot {
+            width: 6px; height: 6px;
+            border-radius: 50%;
+        }
+
+        .analysis-card-header h3 {
+            font-family: 'Space Mono', monospace;
+            font-size: 0.75rem;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+            color: var(--text-muted);
+            font-weight: 400;
+        }
+
+        /* ─── MODULE BREAKDOWN ─── */
+        .module-list { display: flex; flex-direction: column; gap: 0.75rem; }
+
+        .module-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .module-name {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            min-width: 130px;
+        }
+
+        .module-bar-track {
+            flex: 1;
+            height: 4px;
+            background: rgba(209,232,226,0.07);
+            border-radius: 2px;
+            margin: 0 1rem;
+            overflow: hidden;
+        }
+
+        .module-bar-fill {
+            height: 100%;
+            border-radius: 2px;
+            transition: width 0.4s ease;
+        }
+
+        .module-status {
+            font-family: 'Space Mono', monospace;
+            font-size: 0.65rem;
+            letter-spacing: 0.06em;
+            text-transform: uppercase;
+            min-width: 60px;
+            text-align: right;
+        }
+
+        /* ─── ISSUES & POSITIVES ─── */
+        .feed-list { display: flex; flex-direction: column; gap: 0.5rem; }
+
+        .feed-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 0.75rem;
+            padding: 0.6rem 0.75rem;
+            border-radius: 6px;
+            font-size: 0.85rem;
+            line-height: 1.4;
+            animation: slideIn 0.3s ease both;
+        }
+
+        .feed-item.issue {
+            background: rgba(224,90,90,0.08);
+            border-left: 2px solid var(--danger);
+            color: rgba(209,232,226,0.8);
+        }
+
+        .feed-item.positive {
+            background: rgba(74,184,160,0.08);
+            border-left: 2px solid var(--good);
+            color: rgba(209,232,226,0.8);
+        }
+
+        .feed-icon { font-size: 0.8rem; margin-top: 2px; flex-shrink: 0; }
+
+        .empty-state {
+            text-align: center;
+            padding: 2rem 1rem;
+            color: var(--text-muted);
+            font-size: 0.85rem;
+        }
+
+        .empty-state-icon { font-size: 2rem; margin-bottom: 0.5rem; opacity: 0.4; }
+
+        /* ─── MODE TOGGLE ─── */
+        .mode-toggle {
+            display: flex;
+            background: rgba(44,53,49,0.6);
+            border: 1px solid var(--glass-border);
+            border-radius: 8px;
+            padding: 4px;
+            margin-bottom: 2rem;
+        }
+
+        .mode-btn {
+            flex: 1;
+            padding: 0.6rem;
+            border: none;
+            border-radius: 6px;
+            background: transparent;
+            color: var(--text-muted);
+            font-family: 'Space Mono', monospace;
+            font-size: 0.7rem;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .mode-btn.active {
+            background: var(--teal);
+            color: var(--mist);
+        }
+
+        /* ─── BADGE ─── */
+        .strength-badge-large {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.4rem 1rem;
+            border-radius: 100px;
+            font-family: 'Space Mono', monospace;
+            font-size: 0.7rem;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+            font-weight: 700;
+        }
+
+        .badge-weak     { background: rgba(224,90,90,0.15);    color: #e07070; border: 1px solid rgba(224,90,90,0.3); }
+        .badge-moderate { background: rgba(217,176,140,0.15);  color: var(--sand); border: 1px solid rgba(217,176,140,0.3); }
+        .badge-strong   { background: rgba(74,184,160,0.15);   color: var(--good); border: 1px solid rgba(74,184,160,0.3); }
+
+        /* ─── HOW IT WORKS ─── */
+        #how {
+            position: relative; z-index: 1;
+            padding: 6rem 2rem;
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 1.5rem;
+            max-width: 1100px;
+            margin: 0 auto;
+        }
+
+        .feature-card {
+            background: rgba(44,53,49,0.4);
+            border: 1px solid var(--glass-border);
+            border-radius: 12px;
+            padding: 2rem 1.5rem;
+            transition: all 0.3s;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .feature-card::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0;
+            height: 2px;
+            background: linear-gradient(90deg, var(--teal), transparent);
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+
+        .feature-card:hover {
+            border-color: rgba(17,100,102,0.4);
+            transform: translateY(-4px);
+        }
+
+        .feature-card:hover::before { opacity: 1; }
+
+        .feature-num {
+            font-family: 'Space Mono', monospace;
+            font-size: 0.65rem;
+            color: var(--teal-light);
+            letter-spacing: 0.15em;
+            margin-bottom: 1.25rem;
+        }
+
+        .feature-icon {
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .feature-card h3 {
+            font-size: 1rem;
+            font-weight: 600;
+            color: var(--mist);
+            margin-bottom: 0.75rem;
+        }
+
+        .feature-card p {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            line-height: 1.6;
+        }
+
+        /* ─── PRICING ─── */
+        #pricing {
+            position: relative; z-index: 1;
+            padding: 6rem 2rem;
+            background: rgba(17,24,23,0.5);
+            border-top: 1px solid var(--glass-border);
+            border-bottom: 1px solid var(--glass-border);
+        }
+
+        .pricing-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1.5rem;
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        .pricing-card {
+            background: rgba(44,53,49,0.4);
+            border: 1px solid var(--glass-border);
+            border-radius: 16px;
+            padding: 2.5rem 2rem;
+            text-align: center;
+            transition: all 0.3s;
+        }
+
+        .pricing-card.featured {
+            background: rgba(17,100,102,0.2);
+            border-color: rgba(17,100,102,0.5);
+            position: relative;
+        }
+
+        .pricing-card.featured::before {
+            content: 'MOST POPULAR';
+            position: absolute;
+            top: -1px; left: 50%; transform: translateX(-50%);
+            background: var(--teal);
+            color: var(--mist);
+            font-family: 'Space Mono', monospace;
+            font-size: 0.6rem;
+            letter-spacing: 0.15em;
+            padding: 0.3rem 0.75rem;
+            border-radius: 0 0 8px 8px;
+        }
+
+        .pricing-tier {
+            font-family: 'Space Mono', monospace;
+            font-size: 0.7rem;
+            letter-spacing: 0.15em;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            margin-bottom: 1.5rem;
+        }
+
+        .pricing-price {
+            font-family: 'Space Mono', monospace;
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: var(--mist);
+            margin-bottom: 0.25rem;
+        }
+
+        .pricing-price sup { font-size: 1rem; color: var(--text-muted); }
+        .pricing-period {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            margin-bottom: 2rem;
+        }
+
+        .pricing-features {
+            list-style: none;
+            text-align: left;
+            margin-bottom: 2rem;
+            display: flex;
+            flex-direction: column;
+            gap: 0.6rem;
+        }
+
+        .pricing-features li {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+        }
+
+        .pricing-features li::before {
+            content: '✓';
+            color: var(--good);
+            font-weight: 700;
+            font-size: 0.8rem;
+        }
+
+        /* ─── FOOTER ─── */
+        footer {
+            position: relative; z-index: 1;
+            padding: 3rem 3rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            border-top: 1px solid var(--glass-border);
+        }
+
+        .footer-brand {
+            font-family: 'Space Mono', monospace;
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            letter-spacing: 0.1em;
+        }
+
+        .footer-brand span { color: var(--sand); }
+
+        .footer-links {
+            display: flex;
+            gap: 2rem;
+            list-style: none;
+        }
+
+        .footer-links a {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            text-decoration: none;
+            transition: color 0.2s;
+        }
+
+        .footer-links a:hover { color: var(--mist); }
+
+        /* ─── ANIMATIONS ─── */
+        @keyframes fadeUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to   { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateX(-8px); }
+            to   { opacity: 1; transform: translateX(0); }
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50%       { opacity: 0.3; }
+        }
+
+        /* ─── RESPONSIVE ─── */
+        @media (max-width: 900px) {
+            nav { padding: 1rem 1.5rem; }
+            .nav-links { display: none; }
+            .validator-layout { grid-template-columns: 1fr; }
+            .features-grid { grid-template-columns: 1fr 1fr; }
+            .pricing-grid { grid-template-columns: 1fr; max-width: 400px; }
+            .stats-bar { flex-wrap: wrap; }
+            .stat-item { border-radius: 10px !important; border-left: 1px solid var(--glass-border) !important; flex: 1; min-width: 140px; }
+        }
+
+        @media (max-width: 600px) {
+            .features-grid { grid-template-columns: 1fr; }
+            footer { flex-direction: column; gap: 1.5rem; text-align: center; }
+        }
+    </style>
+</head>
+<body>
+
+<!-- ── NAV ── -->
+<nav>
+    <div class="nav-logo">
+        <div class="logo-mark"></div>
+        <div class="logo-text"><span>E3</span> · Empathy Encryption</div>
+    </div>
+    <ul class="nav-links">
+        <li><a href="#validator">Validator</a></li>
+        <li><a href="#how">How It Works</a></li>
+        <li><a href="#pricing">Pricing</a></li>
+        <li><a href="#pricing" class="nav-cta">Get API Access</a></li>
+    </ul>
+</nav>
+
+<!-- ── HERO ── -->
+<section class="hero">
+    <div class="hero-glow"></div>
+    <div class="hero-glow-2"></div>
+    <div>
+        <div class="hero-tag">Human-Centered Security Intelligence</div>
+        <h1>
+            Password validation<br>
+            with <span class="accent">intention</span> &amp;<br>
+            <span class="teal">empathy</span>
+        </h1>
+        <p class="hero-sub">
+            E3 evaluates passwords beyond brute strength — analyzing structure, predictability, keyboard patterns, and human readability.
+        </p>
+        <div class="hero-actions">
+            <a href="#validator" class="btn-primary">
+                Try the Validator ↓
+            </a>
+            <a href="#how" class="btn-ghost">How it works →</a>
+        </div>
+    </div>
+</section>
+
+<div class="stats-bar">
+    <div class="stat-item">
+        <div class="stat-num">14+</div>
+        <div class="stat-label">Checks Run</div>
+    </div>
+    <div class="stat-item">
+        <div class="stat-num">5ms</div>
+        <div class="stat-label">Avg Response</div>
+    </div>
+    <div class="stat-item">
+        <div class="stat-num">4</div>
+        <div class="stat-label">Analysis Modules</div>
+    </div>
+    <div class="stat-item">
+        <div class="stat-num">REST</div>
+        <div class="stat-label">API Ready</div>
+    </div>
+</div>
+
+<!-- ── VALIDATOR ── -->
+<section id="validator">
+    <div class="section-label">// Live Analysis</div>
+    <h2 class="section-title">Password Validator</h2>
+    <p class="section-sub">Type to analyze in real-time. All processing happens client-side when offline.</p>
+
+    <div class="validator-layout">
+
+        <!-- LEFT: Input + Score -->
+        <div class="validator-left">
+            <label class="input-label" for="password">// Password Input</label>
+            <div class="input-wrapper">
+                <input type="password" id="password" placeholder="Enter your password…" oninput="validate()" autocomplete="off" spellcheck="false">
+                <button type="button" id="toggle-password" class="toggle-btn" aria-label="Toggle visibility">👁</button>
+            </div>
+
+            <div class="mode-toggle">
+                <button class="mode-btn active" id="mode-empathy" onclick="setMode('empathy')">💛 Empathy Mode</button>
+                <button class="mode-btn" id="mode-strict" onclick="setMode('strict')">🔒 Strict Mode</button>
+            </div>
+
+            <div class="char-map-label">// Character Map</div>
+            <div id="char-map">
+                <div class="empty-state" style="padding:0.5rem 0; font-size:0.8rem;">Start typing to see analysis…</div>
+            </div>
+
+            <div class="meter-section">
+                <div class="meter-header">
+                    <div>
+                        <div class="meter-title">// Security Score</div>
+                        <div id="strength-badge-wrap" style="margin-top:0.4rem;"></div>
+                    </div>
+                    <div class="meter-score" id="score-display">—<span>/100</span></div>
+                </div>
+                <div class="progress-track">
+                    <div id="progress-fill"></div>
+                </div>
+                <div class="strength-labels">
+                    <span class="strength-label">Weak</span>
+                    <span class="strength-label">Moderate</span>
+                    <span class="strength-label">Strong</span>
+                </div>
+            </div>
+
+            <!-- Module Breakdown -->
+            <div class="char-map-label" style="margin-bottom:1rem;">// Module Breakdown</div>
+            <div class="module-list">
+                <div class="module-item">
+                    <span class="module-name">Structure</span>
+                    <div class="module-bar-track"><div class="module-bar-fill" id="bar-structure" style="width:0%; background:var(--good)"></div></div>
+                    <span class="module-status" id="stat-structure" style="color:var(--text-muted)">—</span>
+                </div>
+                <div class="module-item">
+                    <span class="module-name">Predictability</span>
+                    <div class="module-bar-track"><div class="module-bar-fill" id="bar-predict" style="width:0%; background:var(--good)"></div></div>
+                    <span class="module-status" id="stat-predict" style="color:var(--text-muted)">—</span>
+                </div>
+                <div class="module-item">
+                    <span class="module-name">Repetition</span>
+                    <div class="module-bar-track"><div class="module-bar-fill" id="bar-repeat" style="width:0%; background:var(--good)"></div></div>
+                    <span class="module-status" id="stat-repeat" style="color:var(--text-muted)">—</span>
+                </div>
+                <div class="module-item">
+                    <span class="module-name">Clarity</span>
+                    <div class="module-bar-track"><div class="module-bar-fill" id="bar-clarity" style="width:0%; background:var(--good)"></div></div>
+                    <span class="module-status" id="stat-clarity" style="color:var(--text-muted)">—</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- RIGHT: Issues + Positives -->
+        <div class="validator-right">
+            <div class="analysis-card">
+                <div class="analysis-card-header">
+                    <div class="dot" style="background:var(--danger)"></div>
+                    <h3>Issues Detected</h3>
+                </div>
+                <div id="issues-feed" class="feed-list">
+                    <div class="empty-state">
+                        <div class="empty-state-icon">🔍</div>
+                        No password entered yet
+                    </div>
+                </div>
+            </div>
+            <div class="analysis-card">
+                <div class="analysis-card-header">
+                    <div class="dot" style="background:var(--good)"></div>
+                    <h3>Strengths</h3>
+                </div>
+                <div id="positives-feed" class="feed-list">
+                    <div class="empty-state">
+                        <div class="empty-state-icon">✦</div>
+                        Strengths will appear here
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</section>
+
+<!-- ── HOW IT WORKS ── -->
+<section id="how">
+    <div class="section-label">// Engine Architecture</div>
+    <h2 class="section-title">How E3 Works</h2>
+    <p class="section-sub">Four specialized modules working in parallel to evaluate every dimension of password quality.</p>
+
+    <div class="features-grid">
+        <div class="feature-card">
+            <div class="feature-num">01 / 04</div>
+            <div class="feature-icon">🧠</div>
+            <h3>Intentional Structure</h3>
+            <p>Evaluates character variety and diversity. Rewards thoughtful compositions over random or uniform patterns.</p>
+        </div>
+        <div class="feature-card">
+            <div class="feature-num">02 / 04</div>
+            <div class="feature-icon">🔮</div>
+            <h3>Predictability Detection</h3>
+            <p>Identifies ascending sequences, common patterns like "123" or "abc", and arrangement predictability.</p>
+        </div>
+        <div class="feature-card">
+            <div class="feature-num">03 / 04</div>
+            <div class="feature-icon">⌨️</div>
+            <h3>Keyboard Patterns</h3>
+            <p>Detects QWERTY rows, common keyboard walks, and finger-path sequences that are easy to guess.</p>
+        </div>
+        <div class="feature-card">
+            <div class="feature-num">04 / 04</div>
+            <div class="feature-icon">👁</div>
+            <h3>Visual Clarity</h3>
+            <p>Flags confusable character pairs like <code style="font-size:0.8em; color:var(--sand)">1 l I 0 O</code> that cause recall errors and user frustration.</p>
+        </div>
+    </div>
+</section>
+
+<!-- ── PRICING ── -->
+<section id="pricing">
+    <div class="section-label">// API Access</div>
+    <h2 class="section-title">Simple Pricing</h2>
+    <p class="section-sub">Integrate E3 into your product with our REST API. No usage lock-ins.</p>
+
+    <div class="pricing-grid">
+        <div class="pricing-card">
+            <div class="pricing-tier">Starter</div>
+            <div class="pricing-price"><sup>$</sup>0</div>
+            <div class="pricing-period">forever free</div>
+            <ul class="pricing-features">
+                <li>1,000 validations/mo</li>
+                <li>All 4 analysis modules</li>
+                <li>JSON response</li>
+                <li>Community support</li>
+            </ul>
+            <a href="#" class="btn-ghost" style="width:100%; justify-content:center; font-size:0.85rem;">Get Started</a>
+        </div>
+        <div class="pricing-card featured">
+            <div class="pricing-tier">Pro</div>
+            <div class="pricing-price"><sup>$</sup>29</div>
+            <div class="pricing-period">per month</div>
+            <ul class="pricing-features">
+                <li>100,000 validations/mo</li>
+                <li>All 4 analysis modules</li>
+                <li>Score breakdown API</li>
+                <li>Webhook support</li>
+                <li>Email support</li>
+            </ul>
+            <a href="#" class="btn-primary" style="width:100%; justify-content:center; font-size:0.85rem;">Start Free Trial</a>
+        </div>
+        <div class="pricing-card">
+            <div class="pricing-tier">Enterprise</div>
+            <div class="pricing-price" style="font-size:2rem;">Custom</div>
+            <div class="pricing-period">contact us</div>
+            <ul class="pricing-features">
+                <li>Unlimited validations</li>
+                <li>Custom rule sets</li>
+                <li>SLA guarantee</li>
+                <li>Dedicated infra</li>
+                <li>Priority support</li>
+            </ul>
+            <a href="#" class="btn-ghost" style="width:100%; justify-content:center; font-size:0.85rem;">Contact Sales</a>
+        </div>
+    </div>
+</section>
+
+<!-- ── FOOTER ── -->
+<footer>
+    <div class="footer-brand"><span>E3</span> · Empathy Encryption Engine · © 2026</div>
+    <ul class="footer-links">
+        <li><a href="#">API Docs</a></li>
+        <li><a href="#">Privacy</a></li>
+        <li><a href="#">Terms</a></li>
+        <li><a href="#">GitHub</a></li>
+    </ul>
+</footer>
+
+<script>
+// ── State ──
+let currentMode = 'empathy';
+
+// ── Toggle Visibility ──
+document.getElementById('toggle-password').addEventListener('click', function() {
+    const pw = document.getElementById('password');
+    const btn = this;
+    pw.type = pw.type === 'password' ? 'text' : 'password';
+    btn.textContent = pw.type === 'password' ? '👁' : '🙈';
+});
+
+// ── Mode Toggle ──
+function setMode(mode) {
+    currentMode = mode;
+    document.getElementById('mode-empathy').classList.toggle('active', mode === 'empathy');
+    document.getElementById('mode-strict').classList.toggle('active', mode === 'strict');
+    validate();
+}
+
+// ── Character Map ──
+function buildCharMap(password) {
+    const container = document.getElementById('char-map');
+    if (!password) {
+        container.innerHTML = '<div style="font-size:0.8rem; color:rgba(209,232,226,0.2); padding:0.25rem 0;">Start typing…</div>';
+        return;
+    }
+    container.innerHTML = password.split('').map(c => {
+        let cls = 'char-lower';
+        if (/[A-Z]/.test(c)) cls = 'char-upper';
+        else if (/[0-9]/.test(c)) cls = 'char-digit';
+        else if (/[^a-zA-Z0-9]/.test(c)) cls = 'char-symbol';
+        return `<span class="char-token ${cls}">${c === ' ' ? '·' : c}</span>`;
+    }).join('');
+}
+
+// ── Validation Engine ──
+function localValidate(password, strict) {
+    const issues = [];
+    const positives = [];
+    let score = 0;
+
+    const hasLower  = /[a-z]/.test(password);
+    const hasUpper  = /[A-Z]/.test(password);
+    const hasDigit  = /[0-9]/.test(password);
+    const hasSymbol = /[^a-zA-Z0-9]/.test(password);
+    const len = password.length;
+
+    // --- Structure module ---
+    let structureScore = 0;
+    if (len >= 8)  { score += 10; structureScore += 25; }
+    if (len >= 12) { score += 10; structureScore += 25; }
+    if (len >= 16) { score += 10; structureScore += 25; }
+    if (hasLower)  { score += 5;  structureScore += 25; }
+    if (hasUpper)  { score += 5;  }
+    if (hasDigit)  { score += 5;  }
+    if (hasSymbol) { score += 10; }
+    const charTypes = [hasLower, hasUpper, hasDigit, hasSymbol].filter(Boolean).length;
+    if (charTypes >= 3) { score += 10; positives.push('Uses 3+ character types — good structural variety'); }
+    if (charTypes === 4) { score += 5; positives.push('All character types present — excellent composition'); }
+    if (len < 8) issues.push('Password too short — aim for at least 8 characters');
+    if (len < 12 && strict) issues.push('[Strict] Minimum 12 characters recommended for production use');
+    if (len >= 16) positives.push('Length is excellent (16+ characters)');
+    else if (len >= 12) positives.push('Good length (12+ characters)');
+
+    // --- Predictability module ---
+    let predictScore = 100;
+    const seqPatterns = ['0123','1234','2345','3456','4567','5678','6789','abcd','bcde','cdef','defg','efgh','fghi','ghij','hijk','qwer','wert','erty','rtyui','asdf','sdfg','zxcv'];
+    let seqFound = false;
+    for (const p of seqPatterns) {
+        if (password.toLowerCase().includes(p)) {
+            if (!seqFound) { issues.push('Sequential pattern detected (e.g. "1234", "abcd") — predictable'); seqFound = true; }
+            score -= 10; predictScore -= 35;
+        }
+    }
+    const kbRows = ['qwertyuiop','asdfghjkl','zxcvbnm'];
+    let kbFound = false;
+    for (const row of kbRows) {
+        for (let i = 0; i <= row.length - 4; i++) {
+            if (password.toLowerCase().includes(row.slice(i, i+4))) {
+                if (!kbFound) { issues.push('Keyboard row pattern detected — easy to guess'); kbFound = true; }
+                score -= 8; predictScore -= 30;
+            }
+        }
+    }
+    if (!seqFound && !kbFound) { positives.push('No sequential or keyboard patterns found'); }
+    predictScore = Math.max(0, Math.min(100, predictScore));
+
+    // --- Repetition module ---
+    let repeatScore = 100;
+    if (/(.)\1{2,}/.test(password)) {
+        issues.push('Repeated characters detected (e.g. "aaa") — reduces entropy');
+        score -= 8; repeatScore = 40;
+    } else if (/(.)\1/.test(password)) {
+        if (strict) { issues.push('[Strict] Consecutive duplicate characters found'); }
+        repeatScore = 75;
+    } else {
+        positives.push('No repetition patterns — high character entropy');
+    }
+
+    // --- Clarity module ---
+    let clarityScore = 100;
+    const confusable = ['1','l','I','0','O'];
+    const confCount = password.split('').filter(c => confusable.includes(c)).length;
+    if (confCount > 2) {
+        issues.push('Multiple visually ambiguous characters (1, l, I, 0, O) — hard to recall');
+        score -= 5; clarityScore = 50;
+    } else if (confCount === 0) {
+        positives.push('No visually confusing characters — great clarity');
+    }
+
+    // Clamp score
+    score = Math.max(0, Math.min(100, score));
+    if (strict) score = Math.max(0, score - 10);
+
+    const strength = score < 40 ? 'Weak' : score < 70 ? 'Moderate' : 'Strong';
+
+    return { score, strength, issues, positives, modules: { structure: structureScore, predict: predictScore, repeat: repeatScore, clarity: clarityScore } };
+}
+
+// ── Validate ──
+async function validate() {
+    const password = document.getElementById('password').value;
+    buildCharMap(password);
+
+    if (!password) {
+        resetUI();
+        return;
+    }
+
+    let data;
+    try {
+        const res = await fetch('http://localhost:5000/validate', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ password, mode: currentMode }),
+            signal: AbortSignal.timeout(2000)
+        });
+        data = await res.json();
+        if (!data.modules) data.modules = { structure: 75, predict: 75, repeat: 75, clarity: 75 };
+    } catch {
+        data = localValidate(password, currentMode === 'strict');
+    }
+
+    updateUI(data);
+}
+
+function resetUI() {
+    document.getElementById('score-display').innerHTML = '—<span>/100</span>';
+    document.getElementById('progress-fill').style.width = '0%';
+    document.getElementById('strength-badge-wrap').innerHTML = '';
+    ['structure','predict','repeat','clarity'].forEach(k => {
+        document.getElementById(`bar-${k}`).style.width = '0%';
+        document.getElementById(`stat-${k}`).textContent = '—';
+        document.getElementById(`stat-${k}`).style.color = 'var(--text-muted)';
+    });
+    document.getElementById('issues-feed').innerHTML = '<div class="empty-state"><div class="empty-state-icon">🔍</div>No password entered yet</div>';
+    document.getElementById('positives-feed').innerHTML = '<div class="empty-state"><div class="empty-state-icon">✦</div>Strengths will appear here</div>';
+}
+
+function updateUI(data) {
+    const { score, strength, issues, positives, modules } = data;
+
+    // Score
+    document.getElementById('score-display').innerHTML = `${score}<span>/100</span>`;
+
+    // Progress
+    const fill = document.getElementById('progress-fill');
+    fill.style.width = `${score}%`;
+    fill.style.background = score < 40 ? 'var(--danger)' : score < 70 ? 'var(--warn)' : 'var(--good)';
+
+    // Badge
+    const badgeClass = score < 40 ? 'badge-weak' : score < 70 ? 'badge-moderate' : 'badge-strong';
+    const badgeIcon = score < 40 ? '⚠' : score < 70 ? '◐' : '✓';
+    document.getElementById('strength-badge-wrap').innerHTML =
+        `<span class="strength-badge-large ${badgeClass}">${badgeIcon} ${strength}</span>`;
+
+    // Modules
+    if (modules) {
+        const defs = [
+            ['structure', modules.structure],
+            ['predict',   modules.predict],
+            ['repeat',    modules.repeat],
+            ['clarity',   modules.clarity],
+        ];
+        defs.forEach(([key, val]) => {
+            const bar = document.getElementById(`bar-${key}`);
+            const stat = document.getElementById(`stat-${key}`);
+            bar.style.width = `${val}%`;
+            bar.style.background = val >= 70 ? 'var(--good)' : val >= 40 ? 'var(--warn)' : 'var(--danger)';
+            stat.textContent = val >= 70 ? 'Good' : val >= 40 ? 'Risk' : 'Weak';
+            stat.style.color = val >= 70 ? 'var(--good)' : val >= 40 ? 'var(--warn)' : 'var(--danger)';
+        });
+    }
+
+    // Issues
+    const issuesFeed = document.getElementById('issues-feed');
+    issuesFeed.innerHTML = issues && issues.length
+        ? issues.map((iss, i) => `<div class="feed-item issue" style="animation-delay:${i*0.05}s"><span class="feed-icon">⚠</span>${iss}</div>`).join('')
+        : '<div class="feed-item positive"><span class="feed-icon">✓</span>No issues detected — great work!</div>';
+
+    // Positives
+    const positivesFeed = document.getElementById('positives-feed');
+    positivesFeed.innerHTML = positives && positives.length
+        ? positives.map((p, i) => `<div class="feed-item positive" style="animation-delay:${i*0.05}s"><span class="feed-icon">✓</span>${p}</div>`).join('')
+        : '<div class="empty-state"><div class="empty-state-icon">✦</div>No strengths yet</div>';
+}
+
+// Smooth scroll
+document.querySelectorAll('a[href^="#"]').forEach(a => {
+    a.addEventListener('click', e => {
+        const target = document.querySelector(a.getAttribute('href'));
+        if (target) { e.preventDefault(); target.scrollIntoView({ behavior: 'smooth' }); }
+    });
+});
+</script>
+</body>
+</html>
