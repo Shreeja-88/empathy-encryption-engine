@@ -12,6 +12,20 @@ document.getElementById('toggle-password').addEventListener('click', function() 
     }
 });
 
+// Global mode variable (sync with HTML)
+window.currentMode = 'empathy';
+
+// Function to set validation mode (sync with HTML)
+function setMode(mode) {
+    window.currentMode = mode;
+    document.getElementById('mode-empathy').classList.toggle('active', mode === 'empathy');
+    document.getElementById('mode-strict').classList.toggle('active', mode === 'strict');
+    // Call the HTML's validate function
+    if (typeof validate === 'function') {
+        validate();
+    }
+}
+
 // Live validation function
 async function validate() {
     const password = document.getElementById("password").value;
@@ -26,7 +40,7 @@ async function validate() {
         const response = await fetch("http://localhost:5000/validate", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ password })
+            body: JSON.stringify({ password, mode: window.currentMode || 'empathy' })
         });
 
         const data = await response.json();
@@ -45,9 +59,9 @@ function updateUI(data) {
     const progressBar = document.getElementById("progress");
     progressBar.style.width = `${data.score}%`;
 
-    // Update progress bar color based on score
-    if (data.score < 40) {
-        progressBar.style.background = '#ff4757'; // Red
+    // Update progress bar color based on validity
+    if (data.isValid === false) {
+        progressBar.style.background = '#ff4757'; // Red for invalid
     } else if (data.score < 70) {
         progressBar.style.background = '#ffa726'; // Orange
     } else {

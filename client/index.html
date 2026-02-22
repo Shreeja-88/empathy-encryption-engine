@@ -659,7 +659,7 @@
             max-width: 1100px;
             margin: 0 auto;
         }
-
+        
         .feature-card {
             background: rgba(44,53,49,0.4);
             border: 1px solid var(--glass-border);
@@ -695,10 +695,11 @@
             margin-bottom: 1.25rem;
         }
 
-        .feature-icon {
-            font-size: 1.5rem;
-            margin-bottom: 1rem;
-        }
+.feature-icon svg {
+    width: 16px;   /* smaller size */
+    height: 16px;
+    stroke-width: 2;
+}
 
         .feature-card h3 {
             font-size: 1rem;
@@ -1010,7 +1011,7 @@
                 </div>
                 <div id="issues-feed" class="feed-list">
                     <div class="empty-state">
-                        <div class="empty-state-icon">🔍</div>
+                        <div class="empty-state-icon"></div>
                         No password entered yet
                     </div>
                 </div>
@@ -1037,32 +1038,69 @@
     <div class="section-label">// Engine Architecture</div>
     <h2 class="section-title">How E3 Works</h2>
     <p class="section-sub">Four specialized modules working in parallel to evaluate every dimension of password quality.</p>
+<div class="features-grid">
 
-    <div class="features-grid">
-        <div class="feature-card">
-            <div class="feature-num">01 / 04</div>
-            <div class="feature-icon">🧠</div>
-            <h3>Intentional Structure</h3>
-            <p>Evaluates character variety and diversity. Rewards thoughtful compositions over random or uniform patterns.</p>
+    <div class="feature-card">
+        <div class="feature-num">01 / 04</div>
+        <div class="feature-icon">
+            <!-- Grid Icon -->
+            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <rect x="3" y="3" width="7" height="7"></rect>
+                <rect x="14" y="3" width="7" height="7"></rect>
+                <rect x="14" y="14" width="7" height="7"></rect>
+                <rect x="3" y="14" width="7" height="7"></rect>
+            </svg>
         </div>
-        <div class="feature-card">
-            <div class="feature-num">02 / 04</div>
-            <div class="feature-icon">🔮</div>
-            <h3>Predictability Detection</h3>
-            <p>Identifies ascending sequences, common patterns like "123" or "abc", and arrangement predictability.</p>
+        <h3>Intentional Structure</h3>
+        <p>Evaluates character variety and diversity. Rewards thoughtful compositions over random or uniform patterns.</p>
+    </div>
+
+    <div class="feature-card">
+        <div class="feature-num">02 / 04</div>
+        <div class="feature-icon">
+            <!-- Trend Detection Icon -->
+            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <polyline points="3 17 9 11 13 15 21 7"></polyline>
+                <polyline points="14 7 21 7 21 14"></polyline>
+            </svg>
         </div>
-        <div class="feature-card">
-            <div class="feature-num">03 / 04</div>
-            <div class="feature-icon">⌨️</div>
-            <h3>Keyboard Patterns</h3>
-            <p>Detects QWERTY rows, common keyboard walks, and finger-path sequences that are easy to guess.</p>
+        <h3>Predictability Detection</h3>
+        <p>Identifies ascending sequences, common patterns like "123" or "abc", and arrangement predictability.</p>
+    </div>
+
+    <div class="feature-card">
+        <div class="feature-num">03 / 04</div>
+        <div class="feature-icon">
+            <!-- Keyboard Icon -->
+            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <rect x="2" y="6" width="20" height="12" rx="2"></rect>
+                <line x1="6" y1="10" x2="6" y2="10"></line>
+                <line x1="10" y1="10" x2="10" y2="10"></line>
+                <line x1="14" y1="10" x2="14" y2="10"></line>
+                <line x1="18" y1="10" x2="18" y2="10"></line>
+            </svg>
         </div>
-        <div class="feature-card">
-            <div class="feature-num">04 / 04</div>
-            <div class="feature-icon">👁</div>
-            <h3>Visual Clarity</h3>
-            <p>Flags confusable character pairs like <code style="font-size:0.8em; color:var(--sand)">1 l I 0 O</code> that cause recall errors and user frustration.</p>
+        <h3>Keyboard Patterns</h3>
+        <p>Detects QWERTY rows, common keyboard walks, and finger-path sequences that are easy to guess.</p>
+    </div>
+
+    <div class="feature-card">
+        <div class="feature-num">04 / 04</div>
+        <div class="feature-icon">
+            <!-- Eye Icon -->
+            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path d="M1 12C3.5 7 7.5 4 12 4s8.5 3 11 8c-2.5 5-6.5 8-11 8S3.5 17 1 12z"></path>
+                <circle cx="12" cy="12" r="3"></circle>
+            </svg>
         </div>
+        <h3>Visual Clarity</h3>
+        <p>Flags confusable character pairs like 
+            <code style="font-size:0.8em; color:var(--sand)">1 l I 0 O</code> 
+            that cause recall errors and user frustration.
+        </p>
+    </div>
+
+</div>
     </div>
 </section>
 

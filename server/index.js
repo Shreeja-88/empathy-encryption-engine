@@ -11,9 +11,9 @@ app.get("/", (req, res) => {
 });
 
 app.post("/validate", (req, res) => {
-    const { password } = req.body;
+    const { password, mode = 'empathy' } = req.body;
 
-    const result = evaluatePassword(password);
+    const result = evaluatePassword(password, mode);
     res.json(result);
 });
 setInterval(() => {
