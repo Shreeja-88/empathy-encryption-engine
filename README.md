@@ -9,8 +9,7 @@ The **Empathy Encryption Engine** evaluates passwords based on intentional struc
 ---
 
 ## 🔗 Live Demo
-
-> `https://empathy-encryption-engine.onrender.com/`
+https://empathy-encryption-engine.onrender.com/
 
 ---
 
