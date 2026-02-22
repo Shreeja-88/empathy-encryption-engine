@@ -69,8 +69,8 @@ Traditional rule-based scoring model for comparison.
 ---
 ## Screenshots
 
-![Empathy Mode](./screenshots/empathy.png)
-![Strict Mode](./screenshots/strict.png)
+![Empathy Mode](screenshots/empathy.png)
+![Strict Mode](screenshots/strict.png)
 
 ---
 
